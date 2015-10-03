@@ -1,8 +1,7 @@
-DemTools
+HLDemo
 ==========
 
-A collection of tools that operate GoldSource demo files.
-- DemoSanitizer: neutralizes malicious demo frames which may lead to infection of your PC.
+This is a library for reading and writing GoldSource demo files.
 
 #Building
 ####Windows
