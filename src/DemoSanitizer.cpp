@@ -74,6 +74,8 @@ int main(int argc, char *argv[])
 		nowide::cout << "Done." << std::endl;
 	} catch (const std::exception& ex) {
 		nowide::cerr << "Error: " << ex.what() << std::endl;
+		char c;
+		nowide::cin.getline(&c, 1);
 	}
 
 	return 0;
