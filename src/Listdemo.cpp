@@ -1,4 +1,3 @@
-#include <chrono>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -15,6 +14,16 @@ void usage()
 		"\n\tListdemo <path to demo.dem>"
 		"\n\t- Shows information about the demo."
 		<< std::endl;
+}
+
+template<size_t N>
+inline bool any_matches(const char* pattern, const char* const (&samples)[N])
+{
+	for (size_t i = 0; i < N; ++i) {
+		if (!std::strcmp(pattern, samples[i]))
+			return true;
+	}
+	return false;
 }
 
 int main(int argc, char *argv[])
@@ -59,6 +68,7 @@ int main(int argc, char *argv[])
 		uint8_t msec_min, msec_max;
 		long long msec_sum = 0;
 		bool first = true;
+		bool found_cam_commands = false;
 		for (auto& entry : demo.directoryEntries) {
 			for (auto& frame : entry.frames) {
 				if (static_cast<int>(frame->type) < 2 || static_cast<int>(frame->type) > 9) {
@@ -80,11 +90,25 @@ int main(int argc, char *argv[])
 						msec_max = std::max(msec_max, f->DemoInfo.UserCmd.msec);
 					}
 				}
+
+				if (frame->type == DemoFrameType::CONSOLE_COMMAND) {
+					const char* const camera_commands[] = {
+						"+lookup",
+						"+lookdown",
+						"+left",
+						"+right"
+					};
+
+					ConsoleCommandFrame *f = static_cast<ConsoleCommandFrame*>(frame.get());
+					if (!found_cam_commands && any_matches(f->command.c_str(), camera_commands)) {
+						found_cam_commands = true;
+					}
+				}
 			}
 		}
 
 		if (first) {
-			nowide::cout << "No FPS data because no actual frames.\n";
+			nowide::cout << "There are no demo frames.\n";
 		} else {
 			nowide::cout << "Highest FPS: " << (1 / frametime_min) << '\n';
 			nowide::cout << "Lowest FPS: " << (1 / frametime_max) << '\n';
@@ -92,6 +116,9 @@ int main(int argc, char *argv[])
 			nowide::cout << "Lowest msec: " << static_cast<unsigned>(msec_min) << " (" << (1000.0 / msec_min) << " FPS)\n";
 			nowide::cout << "Highest msec: " << static_cast<unsigned>(msec_max) << " (" << (1000.0 / msec_max) << " FPS)\n";
 			nowide::cout << "Average msec: " << (msec_sum / static_cast<double>(count)) << " (" << (1000.0 / (msec_sum / static_cast<double>(count))) << " FPS)\n";
+
+			if (found_cam_commands)
+				nowide::cout << "\nFound camera movement commands.\n";
 		}
 	} catch (const std::exception& ex) {
 		nowide::cout << "Error: " << ex.what() << std::endl;
