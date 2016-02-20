@@ -61,5 +61,6 @@ int main(int argc, char *argv[])
 		nowide::cerr << "Error: " << ex.what() << std::endl;
 	}
 
+	nowide::cout.flush();
 	return 0;
 }
