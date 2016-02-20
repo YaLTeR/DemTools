@@ -20,6 +20,7 @@ set (TOOLS
      DemoSanitizer
      FixYaw
      Listdemo
+     DumpFrames
      )
 
 foreach (TOOL ${TOOLS})

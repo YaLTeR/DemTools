@@ -5,6 +5,7 @@ A collection of tools that operate GoldSource demo files.
 - DemoSanitizer: neutralizes malicious demo frames which may lead to infection of your PC.
 - FixYaw: fixes the view yaw to the given value.
 - Listdemo: prints some info about the demo (game, map, time, FPS).
+- DumpFrames: dumps frame info with little details.
 
 #Building
 ####Windows
