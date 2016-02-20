@@ -18,6 +18,8 @@ include_directories (${Boost_INCLUDE_DIR})
 
 set (TOOLS
      DemoSanitizer
+     FixYaw
+     Listdemo
      )
 
 foreach (TOOL ${TOOLS})
